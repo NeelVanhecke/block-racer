@@ -18,9 +18,10 @@ class Block:
         self.right = False
         self.on_tiles = []
         self.checkpoints_cleared = []
+        self.all_checkpoints_cleared = False
         # Settings
         self.MAX_SPEED = 10
-        self.speed = 5
+        self.speed = 10
 
     def center_to_upperleft(self):
         return (self.center[0]-self.size, self.center[1]-self.size)
@@ -45,14 +46,21 @@ class Block:
     def update_status(self, level):
         self.is_on_tiles(level)
         for t in self.on_tiles:
+            # Check if passed through checkpoint
             if t.type == 'checkpoint':
                 for r in t.roi:
-                    if self.rect.colliderect(r):
-                        print('checkpoint')
+                    if self.rect.colliderect(r) and t not in self.checkpoints_cleared:
+                        self.checkpoints_cleared.append(t)
+                        if len(self.checkpoints_cleared) == level.nCheckpoints:
+                            self.all_checkpoints_cleared = True
+            # Check if passed through finish
             elif t.type == 'start':
                 for r in t.roi:
                     if self.rect.colliderect(r):
-                        print('start')
+                        if self.all_checkpoints_cleared:
+                            self.checkpoints_cleared = []
+                            self.all_checkpoints_cleared = False
+                            print('finished')
 
 
     def move_manually(self, level):

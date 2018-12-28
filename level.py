@@ -61,7 +61,7 @@ class Level:
                         reading_word = True
                         reading_value = False
                     elif word == 'number_of_checkpoints':
-                        self.nCheckpoints = value
+                        self.nCheckpoints = int(value)
                         word = ''
                         value = ''
                         reading_word = True
