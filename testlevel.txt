@@ -1,0 +1,10 @@
+tile_size:320
+tile_grid_dimension_x:5
+tile_grid_dimension_y:5
+camera_mode:static
+---:
+b4,sh,b1,0,0
+s,0,sv,0,0
+b3,sh,c,sh,b1
+0,0,sv,0,p
+0,0,b3,sh,b2
