@@ -11,6 +11,7 @@ class Level:
         self.center = (center[0]/2, center[1]/2)
         self.camera_modes = {0: 'centered_on_car', 1: 'static'}
         self.camera_mode = ''
+        self.nCheckpoints = 0
 
     def load(self):
         # Reads text file with characters which are converted into tiles from the Tile class
@@ -59,6 +60,12 @@ class Level:
                         value = ''
                         reading_word = True
                         reading_value = False
+                    elif word == 'number_of_checkpoints':
+                        self.nCheckpoints = value
+                        word = ''
+                        value = ''
+                        reading_word = True
+                        reading_value = False
                     if '---' in word:
                         reading_word = False
                         reading_value = False
@@ -83,20 +90,11 @@ class Level:
             if int((x-self.tile_size/2)/self.tile_size) == self.tile_grid_dimensions[0]:
                 x = self.tile_size/2
                 y += self.tile_size
-
         dx, dy = (self.center[0]-self.startTile.center[0], self.center[1]-self.startTile.center[1])
         for t in self.tile_grid:
             t.move(-dx, -dy)
             # t.center = (t.center[0] + dx, t.center[1] + dy)
             # t.upperleft = (t.upperleft[0] + dx, t.upperleft[1] + dy)
-
-    def is_colliding(self, player_block):
-        for t in self.tile_grid:
-            for f in t.forbidden:
-                if f.colliderect(player_block.rect):
-                    print('collision')
-                    return True
-        return False
 
     def draw(self, display_surf):
         for t in self.tile_grid:
@@ -117,6 +115,6 @@ class Level:
         for t in self.tile_grid:
             t.move(dx, dy)
         # check for collisions
-        if self.is_colliding(player_block):
+        if player_block.is_colliding(self):
             for t in self.tile_grid:
                 t.move(-dx, -dy)

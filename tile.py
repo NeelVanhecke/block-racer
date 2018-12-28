@@ -20,6 +20,7 @@ class Tile:
         self.upperleft = (self.center[0]-self.tile_size/2, self.center[1]-self.tile_size/2)
         self.rect = pygame.Rect(self.upperleft[0], self.upperleft[1], self.tile_size, self.tile_size)
         self.forbidden = [pygame.Rect(0, 0, 0, 0)]
+        self.roi = [pygame.Rect(0, 0, 0, 0)]
         # self.upperleft = level_pos
         # self.size = tile_size
         # self.center = (self.upperleft[0] + self.size[0], self.upperleft[1] + self.size[1])
@@ -78,6 +79,7 @@ class Tile:
             self.forbidden_local = [(0, 0, int(self.tile_size * 5/32), self.tile_size),
                                     (self.tile_size - int(self.tile_size * 5/32), 0, int(self.tile_size * 5/32),
                                      self.tile_size)]
+            self.roi_local = [(0, self.tile_size-int(self.tile_size/32), self.tile_size, int(self.tile_size*2/32))]
         elif char_code == 'p':
             self.type = 'checkpoint'
             self.img = [pygame.transform.scale(Tile.types_dict['vertical'], (self.tile_size, self.tile_size)),
@@ -85,6 +87,8 @@ class Tile:
             self.forbidden_local = [(0, 0, int(self.tile_size * 5/32), self.tile_size),
                                     (self.tile_size - int(self.tile_size * 5/32), 0, int(self.tile_size * 5/32),
                                      self.tile_size)]
+            self.roi_local = [(0, self.tile_size-int(self.tile_size/32), self.tile_size, int(self.tile_size*2/32))]
+
         if self.type == Tile.types_dict['grass']:
             self.drivable = False
         else:
@@ -100,7 +104,12 @@ class Tile:
     def move(self, dx, dy):
         self.upperleft = (self.upperleft[0]-dx, self.upperleft[1]-dy)
         self.center = (self.center[0]-dx, self.center[1]-dy)
+        self.rect = pygame.Rect(self.upperleft[0]-dx, self.upperleft[1]-dy, self.tile_size, self.tile_size)
         self.forbidden = []
         for i in self.forbidden_local:
             self.forbidden.append(pygame.Rect(self.upperleft[0]+i[0]-dx, self.upperleft[1]+i[1]-dy, i[2], i[3]))
+        self.roi = []
+        if self.type == 'start' or self.type == 'checkpoint':
+            for i in self.roi_local:
+                self.roi.append(pygame.Rect(self.upperleft[0]+i[0], self.upperleft[1]+i[1]-self.tile_size/2-1, i[2], i[3]))
         # self.forbidden = pygame.Rect(self.upperleft[0], self.upperleft[1], self.tile_size, self.tile_size)

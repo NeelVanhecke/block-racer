@@ -16,6 +16,8 @@ class Block:
         self.down = False
         self.left = False
         self.right = False
+        self.on_tiles = []
+        self.checkpoints_cleared = []
         # Settings
         self.MAX_SPEED = 10
         self.speed = 5
@@ -33,6 +35,25 @@ class Block:
                 if f.colliderect(self.rect):
                     return True
         return False
+
+    def is_on_tiles(self, level):
+        self.on_tiles = []
+        for t in level.tile_grid:
+            if t.rect.colliderect(self.rect):
+                self.on_tiles.append(t)
+
+    def update_status(self, level):
+        self.is_on_tiles(level)
+        for t in self.on_tiles:
+            if t.type == 'checkpoint':
+                for r in t.roi:
+                    if self.rect.colliderect(r):
+                        print('checkpoint')
+            elif t.type == 'start':
+                for r in t.roi:
+                    if self.rect.colliderect(r):
+                        print('start')
+
 
     def move_manually(self, level):
         x, y = self.center

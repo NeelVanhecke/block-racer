@@ -47,7 +47,7 @@ class BlockRacer:
                 self.player.move(self.level)
             elif self.level.camera_mode == self.level.camera_modes[1]:      # static
                 self.level.move(self.player)
-
+            self.player.update_status(self.level)
             # Draw
             self.display.fill((37, 126, 43))
             self.level.draw(self.display)
@@ -58,5 +58,4 @@ class BlockRacer:
 
 
             # Sandbox
-            print(self.level.tile_grid[0].rect)
             # print('Loops passed: %s' % loops)

@@ -1,3 +1,4 @@
+number_of_checkpoints:1
 tile_size:320
 tile_grid_dimension_x:5
 tile_grid_dimension_y:5
