@@ -98,8 +98,8 @@ class Tile:
         for img in self.img:
             self.rect = (self.upperleft[0], self.upperleft[1], self.tile_size, self.tile_size)
             display_surf.blit(img, self.rect)
-            for i in self.forbidden:
-                pygame.draw.rect(display_surf, (255, 0, 0), i)
+            # for i in self.forbidden:
+            #     pygame.draw.rect(display_surf, (255, 0, 0), i)
 
     def move(self, dx, dy):
         self.upperleft = (self.upperleft[0]-dx, self.upperleft[1]-dy)

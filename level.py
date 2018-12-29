@@ -12,6 +12,7 @@ class Level:
         self.camera_modes = {0: 'centered_on_car', 1: 'static'}
         self.camera_mode = ''
         self.nCheckpoints = 0
+        self.autoblocks = []
 
     def load(self):
         # Reads text file with characters which are converted into tiles from the Tile class
@@ -114,7 +115,12 @@ class Level:
         # move the level
         for t in self.tile_grid:
             t.move(dx, dy)
+        # move the autoblocks
+
         # check for collisions
         if player_block.is_colliding(self):
             for t in self.tile_grid:
                 t.move(-dx, -dy)
+        else:
+            for b in self.autoblocks:
+                b.move(dx, dy)
