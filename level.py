@@ -13,6 +13,9 @@ class Level:
         self.camera_mode = ''
         self.nCheckpoints = 0
         self.autoblocks = []
+        self.char_grid = []
+        self.dim_x = 0
+        self.dim_y = 0
 
     def load(self):
         # Reads text file with characters which are converted into tiles from the Tile class
@@ -44,13 +47,13 @@ class Level:
                         reading_word = True
                         reading_value = False
                     elif word == 'tile_grid_dimension_x':
-                        dim_x = int(value)
+                        self.dim_x = int(value)
                         word = ''
                         value = ''
                         reading_word = True
                         reading_value = False
                     elif word == 'tile_grid_dimension_y':
-                        dim_y = int(value)
+                        self.dim_y = int(value)
                         word = ''
                         value = ''
                         reading_word = True
@@ -79,9 +82,11 @@ class Level:
                     char_grid.append(word)
                     word = ''
         f.close()
+        return char_grid
 
+    def create(self, char_grid):
         # Make map with Tiles
-        self.tile_grid_dimensions = (dim_x, dim_y)
+        self.tile_grid_dimensions = (self.dim_x, self.dim_y)
         x, y = (self.tile_size/2, self.tile_size/2)
         for c in char_grid:
             self.tile_grid.append(tile.Tile(c, (x, y), self.tile_size))
@@ -91,6 +96,8 @@ class Level:
             if int((x-self.tile_size/2)/self.tile_size) == self.tile_grid_dimensions[0]:
                 x = self.tile_size/2
                 y += self.tile_size
+
+    def center_map(self):
         dx, dy = (self.center[0]-self.startTile.center[0], self.center[1]-self.startTile.center[1])
         for t in self.tile_grid:
             t.move(-dx, -dy)
@@ -124,3 +131,17 @@ class Level:
         else:
             for b in self.autoblocks:
                 b.move(dx, dy)
+
+    def resize(self, d):
+        # Resize level
+        for t in self.tile_grid:
+            t.tile_size += d
+            tmp = []
+            for img in t.img:
+                img2 = pygame.transform.scale(img, (self.tile_size, self.tile_size))
+                tmp.append(img2)
+            t.img = tmp
+            self.create(self.char_grid)
+        # Resize blocks
+        for a in self.autoblocks:
+            a.size += d

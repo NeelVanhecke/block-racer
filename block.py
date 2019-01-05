@@ -19,7 +19,6 @@ class Block:
         self.on_tiles = []
         self.checkpoints_cleared = []
         self.all_checkpoints_cleared = False
-        self.money = 0
         # Settings
         self.MAX_SPEED = 10
         self.speed = 10
@@ -49,7 +48,8 @@ class Block:
                 # print(self.on_tiles)
 
     def update_status(self, level, stats):
-        self.is_on_tiles(level)
+        self.on_tiles = self.is_on_tiles(level)
+
         for t in self.on_tiles:
             # Check if passed through checkpoint
             if t.type == 'checkpoint':
@@ -65,8 +65,8 @@ class Block:
                         if self.all_checkpoints_cleared:
                             self.checkpoints_cleared = []
                             self.all_checkpoints_cleared = False
-                            self.money += 1
-                            stats.coins_msg.text = 'Coins: %s' % self.money
+                            stats.money += 1
+                            stats.coins_msg.text = 'Coins: %s' % stats.money
                             print('finished')
 
 
@@ -102,7 +102,6 @@ class Block:
         self.move(-dx, -dy)
         if self.on_one_tile():
             tmp_tile = self.on_tiles[0]
-            print(tmp_tile.type)
             if tmp_tile.type == 'bend1':
                 if self.right == True:
                     if self.center[0] > tmp_tile.upperleft[0] + level.tile_size/2:

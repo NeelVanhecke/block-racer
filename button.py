@@ -36,5 +36,12 @@ class Button:
                     y = tile.center[1]
                     game.level.autoblocks.append(block.Block((x, y), 100,  (255, 0, 0)))
                     game.level.autoblocks[-1].up = True
-
+        elif self.type == 'zoom_in':
+            game.level.tile_size += 10
+            game.level.resize(10)
+        elif self.type == 'zoom_out':
+            game.level.tile_size -= 10
+            game.level.resize(-10)
+        elif self.type == 'buy_speed':
+            game.player.speed += 1
 

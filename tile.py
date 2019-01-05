@@ -97,6 +97,7 @@ class Tile:
     def draw(self, display_surf):
         for img in self.img:
             self.rect = (self.upperleft[0], self.upperleft[1], self.tile_size, self.tile_size)
+            print(self.rect)
             display_surf.blit(img, self.rect)
             # for i in self.forbidden:
             #     pygame.draw.rect(display_surf, (255, 0, 0), i)

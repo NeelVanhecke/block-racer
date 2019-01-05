@@ -1,6 +1,7 @@
 import pygame
 import sys
 import level
+import button
 import block
 import stats
 import upgrades
@@ -14,12 +15,15 @@ class BlockRacer:
         self.fps = 30
         self.fpsClock = pygame.time.Clock()
         self.level = level.Level('testlevel.txt', (dimensions[0], dimensions[1]))
-        self.level.load()
+        (self.level.create(self.level.load()))
+        self.level.center_map()
         self.player = block.Block((dimensions[0]/2, dimensions[1]/2), self.level.tile_size/5, (0, 0, 255), False)
         self.stats = stats.Stats((10, 10), (320, 320))
         self.upgrades = upgrades.Upgrades((10, 360), (320, 480))
-        self.buttons = self.stats.buttons+self.upgrades.buttons
-        print(self.buttons)
+        self.zoom_in = button.Button((1400, 10), (50, 50), '+', 'zoom_in')
+        self.zoom_out= button.Button((1460, 10), (50, 50), '-', 'zoom_out')
+        self.buttons_to_draw = [self.zoom_in, self.zoom_out]
+        self.buttons = self.stats.buttons+self.upgrades.buttons + [self.zoom_in, self.zoom_out]
 
     def run(self):
         loops = 0
@@ -69,13 +73,15 @@ class BlockRacer:
 
             for autoblock in self.level.autoblocks:
                 autoblock.auto_move(self.level)
-
+                autoblock.update_status(self.level, self.stats)
             # Draw
             self.display.fill((37, 126, 43))
             self.level.draw(self.display)
             self.player.draw(self.display)
             for autoblock in self.level.autoblocks:
                 autoblock.draw(self.display)
+            for b in self.buttons_to_draw:
+                b.draw(self.display)
             self.stats.draw(self.display)
             self.upgrades.draw(self.display)
             pygame.display.update()
@@ -88,3 +94,5 @@ class BlockRacer:
             # if self.level.autoblocks:
             #     print(self.level.autoblocks[0].auto)
             # print('Loops passed: %s' % loops)
+            # print(self.level.tile_size)
+            # print(self.level.tile_grid[0].rect)

@@ -12,7 +12,7 @@ class Stats:
         self.buttons = []
         self.coins_msg = screen_message.Screen_message(  (self.pos[0] + 20, self.pos[1] + 110), (0, 0), 'Coins: 0', (0, 0, 0), (145, 95, 35))
         self.upgrade_btn = button.Button((115, 260), (115, 50), 'Upgrades', 'upgrade_btn')  # (0, 0, 0), (145, 95, 35)
-
+        self.money = 0
         self.buttons.append(self.upgrade_btn)
 
     def draw(self, display):
